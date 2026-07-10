@@ -28,7 +28,7 @@
 
   var DEFAULTS = {
     entry: 10, "entry-n": 1, desconto: 0,
-    "parc-pct": 30, incc: 0, "reforcos-n": 0, "reforco-valor": 0
+    "parc-pct": 30, "reforcos-n": 0, "reforco-valor": 0
   };
 
   // Entrega das chaves fixada em dezembro de 2031
@@ -46,10 +46,6 @@
     if (i <= 0) return pv / n;
     var f = Math.pow(1 + i, n);
     return (pv * i * f) / (f - 1);
-  }
-  function inccMensal() {
-    var a = Math.max(0, parseFloat($("incc").value) || 0);
-    return a > 0 ? Math.pow(1 + a / 100, 1 / 12) - 1 : 0;
   }
   function numFld(id, min) {
     var v = parseFloat($(id).value);
@@ -84,13 +80,12 @@
     var entrada = valorFinal * p / 100;
     var nEntrada = numFld("entry-n", 1);
     var parcEntrada = entrada / nEntrada;
-    var iIncc = inccMensal();
 
     var parcPct = numFld("parc-pct", 0);
     var mesesChaves = mesesAteEntrega();
     $("meses-chaves").value = mesesChaves;
     var parcTotal = valorFinal * parcPct / 100;
-    var parcMensal = pmt(parcTotal, mesesChaves, iIncc);
+    var parcMensal = parcTotal / mesesChaves;
     var somaParc = parcMensal * mesesChaves;
 
     var nRef = Math.round(numFld("reforcos-n", 0));
@@ -108,14 +103,13 @@
     $("r-entry-sub").textContent = nEntrada > 1 ? nEntrada + "× de " + brl.format(parcEntrada) : "à vista · " + p + "%";
 
     $("r-parc").textContent = brl2.format(parcMensal);
-    $("r-parc-sub").textContent = mesesChaves + "× até " + ENTREGA_LABEL + (iIncc > 0 ? " · +INCC" : "");
+    $("r-parc-sub").textContent = mesesChaves + "× até " + ENTREGA_LABEL + " · CUB/SC";
 
     $("r-saldo").textContent = brl.format(saldoChaves);
     $("r-saldo-sub").textContent = saldoPct + "% · quitado na entrega";
 
     $("r-total").textContent = brl.format(total);
-    var acresc = total - valorFinal;
-    $("r-total-sub").textContent = acresc > 1 ? "+" + brl.format(acresc) + " (INCC)" : "sem acréscimo";
+    $("r-total-sub").textContent = "+ correção CUB/SC até as chaves";
 
     var refLine = nRef > 0 ? { lbl: nRef + " reforços de " + brl.format(vRef), amt: brl.format(reforcosTotal) } : null;
     bd([
@@ -149,6 +143,7 @@
       doc ? ["CPF / contato", doc] : null,
       ["Unidade", "Torre " + u.torre + " · Apto " + u.apto + " · " + areaFmt(u.area)],
       ["Valor" + (desc > 0 ? " (c/ desconto)" : ""), brl.format(valorFinal)],
+      ["Correção", "CUB/SC até a entrega"],
       ["Entrega das chaves", ENTREGA_EXT],
       corretor ? ["Corretor", corretor] : null,
       ["Data", hoje]
@@ -206,7 +201,7 @@
     });
   }
 
-  ["unit", "entry", "entry-n", "desconto", "parc-pct", "incc", "reforcos-n", "reforco-valor",
+  ["unit", "entry", "entry-n", "desconto", "parc-pct", "reforcos-n", "reforco-valor",
     "cli-nome", "cli-doc", "cli-corretor"].forEach(function (id) {
     var el = $(id);
     el.addEventListener("input", calc);

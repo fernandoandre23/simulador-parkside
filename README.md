@@ -18,8 +18,9 @@ Vercel, ou uma pasta no servidor. São apenas 4 arquivos estáticos.
   e Jost (texto); logo oficial no cabeçalho.
 - **Modelo de venda único:** entrada → parcelamento até as chaves → quitação na entrega.
   - **Entrada** — mínimo de 10% (travado no slider), parcelável em N vezes, com desconto à vista opcional.
-  - **Parcelamento até as chaves** — parcelas mensais durante a obra (% do valor × meses até a entrega),
-    com correção INCC e reforços/balões.
+  - **Parcelamento até as chaves** — parcelas mensais durante a obra (% do valor × meses até a entrega,
+    fixa em dez/2031), com reforços/balões. As parcelas e o saldo são corrigidos pelo **CUB/SC** até a
+    entrega (índice apenas informado, não aplicado numericamente na simulação).
   - **Saldo nas chaves** — o resultado apenas informa o saldo remanescente a quitar na entrega
     (o financiamento bancário / recurso próprio fica fora do escopo da simulação).
 - **Proposta em PDF** — botão "Imprimir / salvar proposta" usa a impressão do navegador
@@ -30,7 +31,7 @@ Vercel, ou uma pasta no servidor. São apenas 4 arquivos estáticos.
 | Arquivo | Papel |
 |---|---|
 | `index.html` | Estrutura da página |
-| `styles.css` | Estilos (tema claro/escuro automático) |
+| `styles.css` | Estilos (tema claro) |
 | `data.js` | Base de dados das unidades (preços, áreas, status) |
 | `app.js` | Lógica do simulador e cálculos |
 | `logo.png` / `symbol.png` | Logo oficial Dinamize (lockup e símbolo) |
@@ -42,10 +43,9 @@ unidades 01–08. Para atualizar preços/status, edite o mapa `PRECOS` em `data.
 
 ## Premissas de cálculo
 
-- Parcelas por **Tabela Price** quando há juros; divisão simples quando juros = 0.
-- INCC anual convertido para taxa mensal equivalente e combinado à taxa de juros sobre o
-  saldo. A parcela exibida é uma **equivalente constante** (aproximação; na prática o saldo
-  é reajustado mês a mês pelo índice).
+- Parcelas até as chaves = (% do valor) ÷ (meses até dez/2031), divisão simples.
+- A correção pelo **CUB/SC** é apenas informada (as parcelas e o saldo serão reajustados por esse
+  índice até a entrega), não sendo aplicada numericamente na simulação.
 - "Renda aproximada exigida" assume parcela ≤ 30% da renda familiar.
 
 Simulação de caráter informativo — não constitui proposta formal.
