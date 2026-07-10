@@ -44,6 +44,10 @@
     B1301: 640000, B1302: 630000, B1303: 630000, B1304: 635000, B1305: 490000, B1306: 400000, B1307: 470000, B1308: 505000
   };
 
+  // Unidades já VENDIDAS (marcadas em vermelho no espelho de vendas).
+  // Preencha com os códigos, ex.: ["A501", "B902", "A1203"].
+  var VENDIDOS = [];
+
   var unidades = [];
   Object.keys(PRECOS).forEach(function (code) {
     var torre = code[0];
@@ -52,7 +56,11 @@
     var andar = Math.floor(apto / 100);
     var area = (torre === "A" ? AREA_A : AREA_B)[unidade];
     var valor = PRECOS[code];
-    var status = valor === "R" ? "reservado" : (typeof valor === "number" ? "disponivel" : "nao_listado");
+    var status;
+    if (VENDIDOS.indexOf(code) !== -1) status = "vendido";
+    else if (valor === "R") status = "reservado";
+    else if (typeof valor === "number") status = "disponivel";
+    else status = "nao_listado";
     unidades.push({
       code: code,
       torre: torre,

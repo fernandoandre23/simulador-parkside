@@ -16,6 +16,9 @@
   --text-3: #a49f8c;
   --gold-bg: #f7eecf;
   --gold-text: #6b6621;
+  --map-disp-bg: #dbeee1; --map-disp-tx: #1b6e3c; --map-disp-strong: #1f9d5c;
+  --map-res-bg: #fbe6d2; --map-res-tx: #9a5713;
+  --map-vend-bg: #f6dcdc; --map-vend-tx: #a32d2d;
   --radius: 10px;
   --shadow: 0 1px 2px rgba(34, 33, 36, 0.04), 0 10px 30px rgba(34, 33, 36, 0.06);
   --serif: system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
@@ -34,6 +37,9 @@
     --text-3: #78746a;
     --gold-bg: #33290f;
     --gold-text: #ddac31;
+    --map-disp-bg: #163d27; --map-disp-tx: #7fd6a0; --map-disp-strong: #1f9d5c;
+    --map-res-bg: #40280f; --map-res-tx: #e3a869;
+    --map-vend-bg: #3d1717; --map-vend-tx: #e89a9a;
     --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 30px rgba(0, 0, 0, 0.4);
   }
 }
@@ -181,8 +187,9 @@ button.btn.primary:hover { background: var(--gold-dark); color: #fff; }
 /* Mapa */
 .legend { display: flex; flex-wrap: wrap; gap: 16px; align-items: center; font-size: 12px; color: var(--text-2); margin-bottom: 14px; }
 .legend .dot { display: inline-block; width: 11px; height: 11px; border-radius: 3px; margin-right: 5px; vertical-align: -1px; }
-.dot.disp { background: var(--gold); }
-.dot.res { background: var(--surface-2); border: 1px solid var(--border-strong); }
+.dot.disp { background: var(--map-disp-strong); }
+.dot.res { background: var(--map-res-tx); }
+.dot.vend { background: var(--map-vend-tx); }
 .dot.nl { background: transparent; border: 1px dashed var(--border-strong); }
 
 .mapa { overflow: hidden; }
@@ -198,10 +205,11 @@ button.btn.primary:hover { background: var(--gold-dark); color: #fff; }
 }
 .mapa .cell .apto { font-weight: 500; }
 .mapa .cell .vlr { font-size: 9px; opacity: 0.9; }
-.mapa .cell.disp { background: var(--gold-bg); color: var(--gold-text); cursor: pointer; }
-.mapa .cell.disp:hover { outline: 2px solid var(--gold); }
-.mapa .cell.disp.sel { background: var(--gold); color: #fff; }
-.mapa .cell.res { background: var(--surface-2); color: var(--text-3); }
+.mapa .cell.disp { background: var(--map-disp-bg); color: var(--map-disp-tx); cursor: pointer; }
+.mapa .cell.disp:hover { outline: 2px solid var(--map-disp-strong); }
+.mapa .cell.disp.sel { background: var(--map-disp-strong); color: #fff; }
+.mapa .cell.res { background: var(--map-res-bg); color: var(--map-res-tx); }
+.mapa .cell.vend { background: var(--map-vend-bg); color: var(--map-vend-tx); }
 .mapa .cell.nl { border: 1px dashed var(--border); color: var(--text-3); }
 
 /* Proposta impressa */

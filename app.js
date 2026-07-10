@@ -14,6 +14,7 @@
   data.unidades.forEach(function (u) { byCode[u.code] = u; });
   var disponiveis = data.unidades.filter(function (u) { return u.status === "disponivel"; });
   var reservadas = data.unidades.filter(function (u) { return u.status === "reservado"; }).length;
+  var vendidas = data.unidades.filter(function (u) { return u.status === "vendido"; }).length;
 
   var sel = $("unit");
   disponiveis.forEach(function (u) {
@@ -22,7 +23,8 @@
     o.textContent = "Torre " + u.torre + " · Apto " + u.apto + " · " + areaFmt(u.area) + " · " + brl.format(u.valor);
     sel.appendChild(o);
   });
-  $("stat-line").innerHTML = "<b>" + disponiveis.length + "</b> unidades disponíveis · <b>" + reservadas + "</b> reservadas";
+  $("stat-line").innerHTML = "<b>" + disponiveis.length + "</b> disponíveis · <b>" + reservadas + "</b> reservadas" +
+    (vendidas > 0 ? " · <b>" + vendidas + "</b> vendidas" : "");
 
   var DEFAULTS = {
     entry: 10, "entry-n": 1, desconto: 0,
@@ -178,6 +180,8 @@
             html += "<td><div class='cell disp' data-code='" + code + "'><span class='apto'>" + u.apto + "</span><span class='vlr'>" + kFmt(u.valor) + "</span></div></td>";
           } else if (u && u.status === "reservado") {
             html += "<td><div class='cell res'><span class='apto'>" + u.apto + "</span><span class='vlr'>RES</span></div></td>";
+          } else if (u && u.status === "vendido") {
+            html += "<td><div class='cell vend'><span class='apto'>" + u.apto + "</span><span class='vlr'>VEND</span></div></td>";
           } else {
             html += "<td><div class='cell nl'><span class='apto'>" + (andar * 100 + n) + "</span></div></td>";
           }
