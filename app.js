@@ -24,18 +24,10 @@
   });
   $("stat-line").innerHTML = "<b>" + disponiveis.length + "</b> unidades disponíveis · <b>" + reservadas + "</b> reservadas";
 
-  var MODE_DESC = {
-    banco: "O saldo remanescente na entrega das chaves é financiado por um banco.",
-    proprio: "O saldo remanescente é quitado à vista na entrega, com recurso próprio do cliente."
-  };
-
   var DEFAULTS = {
     entry: 10, "entry-n": 1, desconto: 0,
-    "parc-pct": 30, "meses-chaves": 36, incc: 0, "reforcos-n": 0, "reforco-valor": 0,
-    "banco-rate": 0.8, "banco-prazo": 360
+    "parc-pct": 30, "meses-chaves": 36, incc: 0, "reforcos-n": 0, "reforco-valor": 0
   };
-
-  var mode = "banco";
 
   function pmt(pv, n, i) {
     if (n <= 0) return 0;
@@ -92,9 +84,12 @@
     var vRef = numFld("reforco-valor", 0);
     var reforcosTotal = nRef * vRef;
 
-    var saldoEntrega = valorFinal - entrada - parcTotal - reforcosTotal;
+    var saldoChaves = valorFinal - entrada - parcTotal - reforcosTotal;
     var avisos = [];
-    if (saldoEntrega < 0) { saldoEntrega = 0; avisos.push("⚠️ Entrada + parcelas + reforços excedem o valor. Ajuste os percentuais."); }
+    if (saldoChaves < 0) { saldoChaves = 0; avisos.push("⚠️ Entrada + parcelas + reforços excedem o valor. Ajuste os percentuais."); }
+
+    var total = entrada + reforcosTotal + somaParc + saldoChaves;
+    var saldoPct = valorFinal > 0 ? Math.round(saldoChaves / valorFinal * 100) : 0;
 
     $("r-entry").textContent = brl.format(entrada);
     $("r-entry-sub").textContent = nEntrada > 1 ? nEntrada + "× de " + brl.format(parcEntrada) : "à vista · " + p + "%";
@@ -102,73 +97,36 @@
     $("r-parc").textContent = brl2.format(parcMensal);
     $("r-parc-sub").textContent = mesesChaves + "× até as chaves" + (iIncc > 0 ? " · +INCC" : "");
 
-    var refLine = nRef > 0 ? { lbl: nRef + " reforços de " + brl.format(vRef), amt: brl.format(reforcosTotal) } : null;
+    $("r-saldo").textContent = brl.format(saldoChaves);
+    $("r-saldo-sub").textContent = saldoPct + "% · quitado na entrega";
 
-    var lines = [
+    $("r-total").textContent = brl.format(total);
+    var acresc = total - valorFinal;
+    $("r-total-sub").textContent = acresc > 1 ? "+" + brl.format(acresc) + " (INCC)" : "sem acréscimo";
+
+    var refLine = nRef > 0 ? { lbl: nRef + " reforços de " + brl.format(vRef), amt: brl.format(reforcosTotal) } : null;
+    bd([
       { lbl: "Valor do imóvel", amt: brl.format(valor) },
       desc > 0 ? { lbl: "Desconto à vista (" + pctFmt(desc) + "%)", amt: "− " + brl.format(valor - valorFinal) } : null,
       { lbl: "Entrada (" + p + "%)" + (nEntrada > 1 ? " · " + nEntrada + "×" : ""), amt: brl.format(entrada) },
       refLine,
-      { lbl: mesesChaves + " parcelas de " + brl2.format(parcMensal), amt: brl.format(somaParc) }
-    ];
+      { lbl: mesesChaves + " parcelas de " + brl2.format(parcMensal), amt: brl.format(somaParc) },
+      { lbl: "Saldo nas chaves", amt: brl.format(saldoChaves) },
+      { lbl: "Total do plano", amt: brl.format(total), total: true }
+    ]);
 
-    if (mode === "banco") {
-      var bancoRate = Math.max(0, parseFloat($("banco-rate").value) || 0) / 100;
-      var bancoPrazo = numFld("banco-prazo", 1);
-      var parcBanco = pmt(saldoEntrega, bancoPrazo, bancoRate);
-      var totalBanco = parcBanco * bancoPrazo;
-      var total = entrada + reforcosTotal + somaParc + totalBanco;
-
-      $("mode-badge").textContent = "Financiamento";
-      $("r-quit-k").textContent = "Financiamento";
-      $("r-quit").textContent = brl2.format(parcBanco);
-      $("r-quit-sub").textContent = bancoPrazo + "× · " + pctFmt(bancoRate * 100) + "% a.m.";
-
-      $("r-total").textContent = brl.format(total);
-      $("r-total-sub").textContent = brl.format(saldoEntrega) + " no banco";
-
-      lines.push({ lbl: "Saldo financiado na entrega", amt: brl.format(saldoEntrega) });
-      lines.push({ lbl: bancoPrazo + " parcelas banco de " + brl2.format(parcBanco), amt: brl.format(totalBanco) });
-      lines.push({ lbl: "Total estimado", amt: brl.format(total), total: true });
-      bd(lines);
-
-      avisos.push("Até as chaves: " + brl2.format(parcMensal) + "/mês. " + rendaHint(Math.max(parcMensal, parcBanco)));
-      fillProposta(u, valor, valorFinal, desc, "Entrada + parcelas até as chaves · quitação por financiamento bancário",
-        propLinhas(p, entrada, nEntrada, nRef, vRef, mesesChaves, parcMensal)
-          .concat([["Saldo na entrega (banco)", brl.format(saldoEntrega)], [bancoPrazo + " parcelas banco", brl2.format(parcBanco)], ["Total estimado", brl.format(total)]]));
-    } else {
-      var totalP = entrada + reforcosTotal + somaParc + saldoEntrega;
-
-      $("mode-badge").textContent = "Recurso próprio";
-      $("r-quit-k").textContent = "Na entrega";
-      $("r-quit").textContent = brl.format(saldoEntrega);
-      $("r-quit-sub").textContent = "à vista (recurso próprio)";
-
-      $("r-total").textContent = brl.format(totalP);
-      var acresc = totalP - valorFinal;
-      $("r-total-sub").textContent = acresc > 1 ? "+" + brl.format(acresc) + " (INCC)" : "sem acréscimo";
-
-      lines.push({ lbl: "Quitação na entrega (à vista)", amt: brl.format(saldoEntrega) });
-      lines.push({ lbl: "Total do plano", amt: brl.format(totalP), total: true });
-      bd(lines);
-
-      avisos.push("Até as chaves: " + brl2.format(parcMensal) + "/mês. " + rendaHint(parcMensal));
-      fillProposta(u, valor, valorFinal, desc, "Entrada + parcelas até as chaves · quitação com recurso próprio",
-        propLinhas(p, entrada, nEntrada, nRef, vRef, mesesChaves, parcMensal)
-          .concat([["Quitação na entrega (à vista)", brl.format(saldoEntrega)], ["Total do plano", brl.format(totalP)]]));
-    }
-
+    avisos.push("Até as chaves: " + brl2.format(parcMensal) + "/mês. " + rendaHint(parcMensal));
     $("warn").textContent = avisos.join("  ");
+
+    var linhas = [["Entrada (" + p + "%)", brl.format(entrada) + (nEntrada > 1 ? " em " + nEntrada + "×" : " à vista")]];
+    if (nRef > 0) linhas.push([nRef + " reforços", brl.format(vRef) + " cada"]);
+    linhas.push([mesesChaves + " parcelas até as chaves", brl2.format(parcMensal)]);
+    linhas.push(["Saldo nas chaves", brl.format(saldoChaves)]);
+    linhas.push(["Total do plano", brl.format(total)]);
+    fillProposta(u, valor, valorFinal, desc, linhas);
   }
 
-  function propLinhas(p, entrada, nEntrada, nRef, vRef, mesesChaves, parcMensal) {
-    var l = [["Entrada (" + p + "%)", brl.format(entrada) + (nEntrada > 1 ? " em " + nEntrada + "×" : " à vista")]];
-    if (nRef > 0) l.push([nRef + " reforços", brl.format(vRef) + " cada"]);
-    l.push([mesesChaves + " parcelas até as chaves", brl2.format(parcMensal)]);
-    return l;
-  }
-
-  function fillProposta(u, valor, valorFinal, desc, modalidade, linhas) {
+  function fillProposta(u, valor, valorFinal, desc, linhas) {
     var nome = ($("cli-nome").value || "").trim();
     var doc = ($("cli-doc").value || "").trim();
     var corretor = ($("cli-corretor").value || "").trim();
@@ -178,7 +136,6 @@
       doc ? ["CPF / contato", doc] : null,
       ["Unidade", "Torre " + u.torre + " · Apto " + u.apto + " · " + areaFmt(u.area)],
       ["Valor" + (desc > 0 ? " (c/ desconto)" : ""), brl.format(valorFinal)],
-      ["Plano", modalidade],
       corretor ? ["Corretor", corretor] : null,
       ["Data", hoje]
     ].filter(Boolean).concat(linhas);
@@ -233,21 +190,8 @@
     });
   }
 
-  // ---- quitação (modalidade) ----
-  document.querySelectorAll("#mode button").forEach(function (b) {
-    b.addEventListener("click", function () {
-      mode = b.getAttribute("data-mode");
-      document.querySelectorAll("#mode button").forEach(function (x) { x.classList.remove("active"); });
-      b.classList.add("active");
-      $("fields-banco").classList.toggle("hidden", mode !== "banco");
-      $("mode-desc").textContent = MODE_DESC[mode];
-      calc();
-    });
-  });
-  $("mode-desc").textContent = MODE_DESC.banco;
-
   ["unit", "entry", "entry-n", "desconto", "parc-pct", "meses-chaves", "incc", "reforcos-n", "reforco-valor",
-    "banco-rate", "banco-prazo", "cli-nome", "cli-doc", "cli-corretor"].forEach(function (id) {
+    "cli-nome", "cli-doc", "cli-corretor"].forEach(function (id) {
     var el = $(id);
     el.addEventListener("input", calc);
     el.addEventListener("change", calc);

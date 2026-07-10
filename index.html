@@ -90,27 +90,8 @@
           </div>
         </section>
 
-        <section class="card no-print">
-          <h2><span class="n">4</span> Quitação na entrega</h2>
-          <div class="seg" id="mode">
-            <button data-mode="banco" class="active">Financiamento bancário</button>
-            <button data-mode="proprio">Recurso próprio</button>
-          </div>
-          <p class="note" id="mode-desc"></p>
-          <div id="fields-banco" class="row field" style="margin-top:14px;">
-            <div>
-              <label for="banco-rate">Juros banco (% a.m.)</label>
-              <input type="number" id="banco-rate" min="0" max="3" step="0.01" value="0.8" />
-            </div>
-            <div>
-              <label for="banco-prazo">Prazo banco (meses)</label>
-              <input type="number" id="banco-prazo" min="12" max="420" step="12" value="360" />
-            </div>
-          </div>
-        </section>
-
         <section class="card">
-          <h2><span class="n">5</span> Cliente</h2>
+          <h2><span class="n">4</span> Cliente</h2>
           <div class="row field">
             <div>
               <label for="cli-nome">Nome do cliente</label>
@@ -131,11 +112,11 @@
       <!-- Coluna 2 -->
       <div class="grid" style="gap:18px; align-content:start;">
         <section class="card">
-          <h2><span class="n">6</span> Resultado <span id="mode-badge" class="pill" style="margin-left:auto"></span></h2>
+          <h2><span class="n">5</span> Resultado</h2>
           <div class="results">
             <div class="result hi"><div class="k">Entrada</div><div class="v" id="r-entry">—</div><div class="s" id="r-entry-sub">—</div></div>
             <div class="result"><div class="k">Parcela / mês</div><div class="v" id="r-parc">—</div><div class="s" id="r-parc-sub">—</div></div>
-            <div class="result"><div class="k" id="r-quit-k">Na entrega</div><div class="v" id="r-quit">—</div><div class="s" id="r-quit-sub">—</div></div>
+            <div class="result"><div class="k">Saldo nas chaves</div><div class="v" id="r-saldo">—</div><div class="s" id="r-saldo-sub">—</div></div>
             <div class="result"><div class="k">Total</div><div class="v" id="r-total">—</div><div class="s" id="r-total-sub">—</div></div>
           </div>
           <div class="breakdown" id="breakdown"></div>
@@ -151,7 +132,7 @@
 
     <!-- Mapa -->
     <section class="card no-print" style="margin-top:18px;">
-      <h2><span class="n">7</span> Mapa de disponibilidade</h2>
+      <h2><span class="n">6</span> Mapa de disponibilidade</h2>
       <div class="legend">
         <span><i class="dot disp"></i> Disponível</span>
         <span><i class="dot res"></i> Reservado</span>
@@ -163,8 +144,9 @@
 
     <p class="note" style="margin-top:24px;">
       Valores conforme a Tabela de Preço Parkside. Simulação de caráter informativo — não constitui proposta
-      formal nem garante disponibilidade da unidade. Correção INCC e condições de financiamento sujeitas a
-      aprovação e ao contrato. © Dinamize Empreendimentos.
+      formal nem garante disponibilidade da unidade. O saldo nas chaves é quitado na entrega (financiamento
+      bancário ou recurso próprio), fora do escopo desta simulação. Correção INCC e condições sujeitas ao
+      contrato. © Dinamize Empreendimentos.
     </p>
   </div>
 

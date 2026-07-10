@@ -20,8 +20,8 @@ Vercel, ou uma pasta no servidor. São apenas 4 arquivos estáticos.
   - **Entrada** — mínimo de 10% (travado no slider), parcelável em N vezes, com desconto à vista opcional.
   - **Parcelamento até as chaves** — parcelas mensais durante a obra (% do valor × meses até a entrega),
     com correção INCC e reforços/balões.
-  - **Quitação na entrega** — o saldo remanescente é quitado por **financiamento bancário** ou
-    **recurso próprio** (à vista).
+  - **Saldo nas chaves** — o resultado apenas informa o saldo remanescente a quitar na entrega
+    (o financiamento bancário / recurso próprio fica fora do escopo da simulação).
 - **Proposta em PDF** — botão "Imprimir / salvar proposta" usa a impressão do navegador
   (layout com cabeçalho da marca e dados do cliente).
 
