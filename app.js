@@ -26,8 +26,18 @@
 
   var DEFAULTS = {
     entry: 10, "entry-n": 1, desconto: 0,
-    "parc-pct": 30, "meses-chaves": 36, incc: 0, "reforcos-n": 0, "reforco-valor": 0
+    "parc-pct": 30, incc: 0, "reforcos-n": 0, "reforco-valor": 0
   };
+
+  // Entrega das chaves fixada em dezembro de 2031
+  var ENTREGA = new Date(2031, 11, 1);
+  var ENTREGA_LABEL = "dez/2031";
+  var ENTREGA_EXT = "dezembro de 2031";
+  function mesesAteEntrega() {
+    var now = new Date();
+    var m = (ENTREGA.getFullYear() - now.getFullYear()) * 12 + (ENTREGA.getMonth() - now.getMonth());
+    return Math.max(1, m);
+  }
 
   function pmt(pv, n, i) {
     if (n <= 0) return 0;
@@ -75,7 +85,8 @@
     var iIncc = inccMensal();
 
     var parcPct = numFld("parc-pct", 0);
-    var mesesChaves = numFld("meses-chaves", 1);
+    var mesesChaves = mesesAteEntrega();
+    $("meses-chaves").value = mesesChaves;
     var parcTotal = valorFinal * parcPct / 100;
     var parcMensal = pmt(parcTotal, mesesChaves, iIncc);
     var somaParc = parcMensal * mesesChaves;
@@ -95,7 +106,7 @@
     $("r-entry-sub").textContent = nEntrada > 1 ? nEntrada + "× de " + brl.format(parcEntrada) : "à vista · " + p + "%";
 
     $("r-parc").textContent = brl2.format(parcMensal);
-    $("r-parc-sub").textContent = mesesChaves + "× até as chaves" + (iIncc > 0 ? " · +INCC" : "");
+    $("r-parc-sub").textContent = mesesChaves + "× até " + ENTREGA_LABEL + (iIncc > 0 ? " · +INCC" : "");
 
     $("r-saldo").textContent = brl.format(saldoChaves);
     $("r-saldo-sub").textContent = saldoPct + "% · quitado na entrega";
@@ -120,7 +131,7 @@
 
     var linhas = [["Entrada (" + p + "%)", brl.format(entrada) + (nEntrada > 1 ? " em " + nEntrada + "×" : " à vista")]];
     if (nRef > 0) linhas.push([nRef + " reforços", brl.format(vRef) + " cada"]);
-    linhas.push([mesesChaves + " parcelas até as chaves", brl2.format(parcMensal)]);
+    linhas.push([mesesChaves + " parcelas até a entrega", brl2.format(parcMensal)]);
     linhas.push(["Saldo nas chaves", brl.format(saldoChaves)]);
     linhas.push(["Total do plano", brl.format(total)]);
     fillProposta(u, valor, valorFinal, desc, linhas);
@@ -136,6 +147,7 @@
       doc ? ["CPF / contato", doc] : null,
       ["Unidade", "Torre " + u.torre + " · Apto " + u.apto + " · " + areaFmt(u.area)],
       ["Valor" + (desc > 0 ? " (c/ desconto)" : ""), brl.format(valorFinal)],
+      ["Entrega das chaves", ENTREGA_EXT],
       corretor ? ["Corretor", corretor] : null,
       ["Data", hoje]
     ].filter(Boolean).concat(linhas);
@@ -190,7 +202,7 @@
     });
   }
 
-  ["unit", "entry", "entry-n", "desconto", "parc-pct", "meses-chaves", "incc", "reforcos-n", "reforco-valor",
+  ["unit", "entry", "entry-n", "desconto", "parc-pct", "incc", "reforcos-n", "reforco-valor",
     "cli-nome", "cli-doc", "cli-corretor"].forEach(function (id) {
     var el = $(id);
     el.addEventListener("input", calc);

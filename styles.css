@@ -120,6 +120,7 @@ select, input[type="number"], input[type="text"] {
   border-radius: var(--radius); appearance: none;
 }
 select:focus, input:focus { outline: none; border-color: var(--gold); box-shadow: 0 0 0 3px var(--gold-bg); }
+input[readonly] { background: var(--surface-2); color: var(--text-2); cursor: default; }
 
 input[type="range"] { width: 100%; accent-color: var(--gold); margin: 8px 0; }
 
