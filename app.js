@@ -153,6 +153,28 @@
     }).join("");
   }
 
+  // ---- legenda (só os status presentes) ----
+  function buildLegend() {
+    var naoListadas = 0, a;
+    for (a = 5; a <= 13; a++) {
+      ["A", "B"].forEach(function (t) {
+        [1, 2, 3, 4, 5, 6, 7, 8].forEach(function (n) {
+          var u = byCode[t + (a * 100 + n)];
+          if (!u || u.status === "nao_listado") naoListadas++;
+        });
+      });
+    }
+    var itens = [["disp", "Disponível", disponiveis.length]];
+    if (reservadas > 0) itens.push(["res", "Reservado", reservadas]);
+    if (vendidas > 0) itens.push(["vend", "Vendido", vendidas]);
+    if (naoListadas > 0) itens.push(["nl", "Não listado", naoListadas]);
+    var html = itens.map(function (i) {
+      return "<span><i class='dot " + i[0] + "'></i> " + i[1] + "</span>";
+    }).join("");
+    html += "<span style='margin-left:auto; color:var(--text-3)'>Clique numa unidade disponível para simular</span>";
+    $("legend").innerHTML = html;
+  }
+
   // ---- mapa ----
   function buildMapa() {
     var andares = [], a;
@@ -213,6 +235,7 @@
     calc();
   });
 
+  buildLegend();
   buildMapa();
   calc();
 })();
