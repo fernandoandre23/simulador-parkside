@@ -3,24 +3,30 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Simulador de venda · Parkside</title>
+  <title>Parkside · Simulador de venda — Dinamize Empreendimentos</title>
+  <link rel="icon" href="symbol.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Jost:wght@300;400;500&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
+  <header class="hero">
+    <img class="brand" src="logo.png" alt="Dinamize Empreendimentos" />
+    <div class="hero-title">
+      <h1>Parkside</h1>
+      <p>Simulador de venda</p>
+    </div>
+  </header>
+
   <div class="wrap">
-    <header class="top">
-      <div class="logo">P</div>
-      <div>
-        <h1>Simulador de venda · Parkside</h1>
-        <p id="stat-line">Carregando unidades…</p>
-      </div>
-    </header>
+    <p class="stat-line" id="stat-line">Carregando unidades…</p>
 
     <!-- Cabeçalho só da proposta impressa -->
     <div id="prop-print" class="prop-print"></div>
 
     <div class="grid layout">
-      <!-- Coluna 1: entradas -->
+      <!-- Coluna 1 -->
       <div class="grid" style="gap:18px; align-content:start;">
         <section class="card">
           <h2><span class="n">1</span> Unidade</h2>
@@ -36,25 +42,14 @@
         </section>
 
         <section class="card no-print">
-          <h2><span class="n">2</span> Modalidade</h2>
-          <div class="seg" id="mode">
-            <button data-mode="direto" class="active">Parcelamento direto</button>
-            <button data-mode="banco">Obra + banco</button>
-          </div>
-          <p class="note" id="mode-desc"></p>
-        </section>
-
-        <section class="card no-print">
-          <h2><span class="n">3</span> Condições</h2>
-
+          <h2><span class="n">2</span> Entrada</h2>
           <div class="field">
             <div class="slider-head">
-              <label for="entry" style="margin:0">Entrada <span style="color:var(--text-3)">(mín. 10%)</span></label>
+              <label for="entry" style="margin:0">Percentual <span style="color:var(--text-3)">(mín. 10%)</span></label>
               <span class="val" id="entry-out">10%</span>
             </div>
             <input type="range" id="entry" min="10" max="100" step="1" value="10" />
           </div>
-
           <div class="row field">
             <div>
               <label for="entry-n">Entrada em (vezes)</label>
@@ -65,7 +60,20 @@
               <input type="number" id="desconto" min="0" max="30" step="0.5" value="0" />
             </div>
           </div>
+        </section>
 
+        <section class="card no-print">
+          <h2><span class="n">3</span> Parcelamento até as chaves</h2>
+          <div class="row field">
+            <div>
+              <label for="parc-pct">Parcelas mensais (% do valor)</label>
+              <input type="number" id="parc-pct" min="0" max="80" step="1" value="30" />
+            </div>
+            <div>
+              <label for="meses-chaves">Meses até as chaves</label>
+              <input type="number" id="meses-chaves" min="1" max="72" step="1" value="36" />
+            </div>
+          </div>
           <div class="row field">
             <div>
               <label for="incc">Correção INCC (% a.a.)</label>
@@ -76,53 +84,33 @@
               <input type="number" id="reforcos-n" min="0" max="60" step="1" value="0" />
             </div>
           </div>
-
-          <div class="field" id="reforco-valor-wrap">
+          <div class="field">
             <label for="reforco-valor">Valor de cada reforço (R$)</label>
             <input type="number" id="reforco-valor" min="0" step="1000" value="0" />
           </div>
+        </section>
 
-          <!-- Modo direto -->
-          <div id="fields-direto">
-            <div class="row field">
-              <div>
-                <label for="bal-n">Parcelas do saldo</label>
-                <input type="number" id="bal-n" min="1" max="240" step="1" value="60" />
-              </div>
-              <div>
-                <label for="rate">Juros (% a.m.)</label>
-                <input type="number" id="rate" min="0" max="10" step="0.05" value="0" />
-              </div>
-            </div>
+        <section class="card no-print">
+          <h2><span class="n">4</span> Quitação na entrega</h2>
+          <div class="seg" id="mode">
+            <button data-mode="banco" class="active">Financiamento bancário</button>
+            <button data-mode="proprio">Recurso próprio</button>
           </div>
-
-          <!-- Modo obra + banco -->
-          <div id="fields-banco" class="hidden">
-            <div class="row field">
-              <div>
-                <label for="obra-pct">Parcelas de obra (% do valor)</label>
-                <input type="number" id="obra-pct" min="0" max="80" step="1" value="20" />
-              </div>
-              <div>
-                <label for="obra-meses">Meses de obra</label>
-                <input type="number" id="obra-meses" min="1" max="60" step="1" value="36" />
-              </div>
+          <p class="note" id="mode-desc"></p>
+          <div id="fields-banco" class="row field" style="margin-top:14px;">
+            <div>
+              <label for="banco-rate">Juros banco (% a.m.)</label>
+              <input type="number" id="banco-rate" min="0" max="3" step="0.01" value="0.8" />
             </div>
-            <div class="row field">
-              <div>
-                <label for="banco-rate">Juros banco (% a.m.)</label>
-                <input type="number" id="banco-rate" min="0" max="3" step="0.01" value="0.8" />
-              </div>
-              <div>
-                <label for="banco-prazo">Prazo banco (meses)</label>
-                <input type="number" id="banco-prazo" min="12" max="420" step="12" value="360" />
-              </div>
+            <div>
+              <label for="banco-prazo">Prazo banco (meses)</label>
+              <input type="number" id="banco-prazo" min="12" max="420" step="12" value="360" />
             </div>
           </div>
         </section>
 
         <section class="card">
-          <h2><span class="n">4</span> Cliente</h2>
+          <h2><span class="n">5</span> Cliente</h2>
           <div class="row field">
             <div>
               <label for="cli-nome">Nome do cliente</label>
@@ -140,32 +128,30 @@
         </section>
       </div>
 
-      <!-- Coluna 2: resultados -->
+      <!-- Coluna 2 -->
       <div class="grid" style="gap:18px; align-content:start;">
         <section class="card">
-          <h2><span class="n">5</span> Resultado <span id="mode-badge" class="pill ok" style="margin-left:auto"></span></h2>
+          <h2><span class="n">6</span> Resultado <span id="mode-badge" class="pill" style="margin-left:auto"></span></h2>
           <div class="results">
             <div class="result hi"><div class="k">Entrada</div><div class="v" id="r-entry">—</div><div class="s" id="r-entry-sub">—</div></div>
-            <div class="result"><div class="k" id="r-a-k">Saldo</div><div class="v" id="r-a">—</div><div class="s" id="r-a-sub">—</div></div>
-            <div class="result"><div class="k" id="r-b-k">Parcela</div><div class="v" id="r-b">—</div><div class="s" id="r-b-sub">—</div></div>
+            <div class="result"><div class="k">Parcela / mês</div><div class="v" id="r-parc">—</div><div class="s" id="r-parc-sub">—</div></div>
+            <div class="result"><div class="k" id="r-quit-k">Na entrega</div><div class="v" id="r-quit">—</div><div class="s" id="r-quit-sub">—</div></div>
             <div class="result"><div class="k">Total</div><div class="v" id="r-total">—</div><div class="s" id="r-total-sub">—</div></div>
           </div>
-
           <div class="breakdown" id="breakdown"></div>
-
           <p class="note" id="warn"></p>
         </section>
 
         <div class="actions no-print">
-          <button class="btn primary" onclick="window.print()">Imprimir / salvar proposta (PDF)</button>
+          <button class="btn primary" onclick="window.print()">Imprimir / salvar proposta</button>
           <button class="btn" id="reset">Restaurar padrão</button>
         </div>
       </div>
     </div>
 
-    <!-- Mapa de disponibilidade -->
+    <!-- Mapa -->
     <section class="card no-print" style="margin-top:18px;">
-      <h2><span class="n">6</span> Mapa de disponibilidade</h2>
+      <h2><span class="n">7</span> Mapa de disponibilidade</h2>
       <div class="legend">
         <span><i class="dot disp"></i> Disponível</span>
         <span><i class="dot res"></i> Reservado</span>
@@ -178,7 +164,7 @@
     <p class="note" style="margin-top:24px;">
       Valores conforme a Tabela de Preço Parkside. Simulação de caráter informativo — não constitui proposta
       formal nem garante disponibilidade da unidade. Correção INCC e condições de financiamento sujeitas a
-      aprovação e ao contrato.
+      aprovação e ao contrato. © Dinamize Empreendimentos.
     </p>
   </div>
 

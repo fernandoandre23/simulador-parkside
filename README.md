@@ -14,14 +14,16 @@ Vercel, ou uma pasta no servidor. São apenas 4 arquivos estáticos.
 
 - **Seleção de unidade** — lista só as disponíveis (as `RESERVADO` e as sem preço na
   tabela ficam de fora). Mostra valor, área privativa e R$/m².
-- **Entrada mínima de 10%** (travada no slider), parcelável em N vezes.
-- **Correção INCC** (% ao ano) incidindo sobre o saldo.
-- **Duas modalidades:**
-  - **Parcelamento direto** — a incorporadora financia o saldo em N parcelas (com juros a.m. opcional).
-  - **Obra + banco** — entrada + parcelas mensais durante a obra + saldo financiado por um
-    banco na entrega das chaves.
+- **Identidade visual Dinamize** — dourado `#ca9722`, carvão, creme; tipografia Cinzel (títulos)
+  e Jost (texto); logo oficial no cabeçalho.
+- **Modelo de venda único:** entrada → parcelamento até as chaves → quitação na entrega.
+  - **Entrada** — mínimo de 10% (travado no slider), parcelável em N vezes, com desconto à vista opcional.
+  - **Parcelamento até as chaves** — parcelas mensais durante a obra (% do valor × meses até a entrega),
+    com correção INCC e reforços/balões.
+  - **Quitação na entrega** — o saldo remanescente é quitado por **financiamento bancário** ou
+    **recurso próprio** (à vista).
 - **Proposta em PDF** — botão "Imprimir / salvar proposta" usa a impressão do navegador
-  (layout já preparado para impressão).
+  (layout com cabeçalho da marca e dados do cliente).
 
 ## Arquivos
 
@@ -31,6 +33,7 @@ Vercel, ou uma pasta no servidor. São apenas 4 arquivos estáticos.
 | `styles.css` | Estilos (tema claro/escuro automático) |
 | `data.js` | Base de dados das unidades (preços, áreas, status) |
 | `app.js` | Lógica do simulador e cálculos |
+| `logo.png` / `symbol.png` | Logo oficial Dinamize (lockup e símbolo) |
 
 ## Base de dados
 
